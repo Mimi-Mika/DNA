@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace DNA_Project.Helper
 {
-    class Connect
+    class MessageEnum
     {
-        // Port : use port 54321 for communication, he is free.
-        // Implement here connection
-
-
     }
 }

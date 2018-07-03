@@ -9,11 +9,11 @@ namespace DNA_Project.DNA
     class Node
     {
         String ip;
-        int socket;
+        int socket => 54321;
         String ipAddrServer;
         int socketPortServer;
-
-        
+        int state;
+        float performanceIndex;
 
     }
 }

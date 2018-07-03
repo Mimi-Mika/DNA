@@ -9,15 +9,16 @@ namespace DNA_Project.Helper
 {
     static class CPUMaxClockFrequency
     {
-        public static float GetCPUMaxClockFrequency() {
+        public static uint GetCPUMaxClockFrequency() {
             var searcher = new ManagementObjectSearcher("select MaxClockSpeed from Win32_Processor");
             foreach (var item in searcher.Get())
             {
                 var clockSpeed = (uint)item["MaxClockSpeed"];
                 Console.WriteLine(clockSpeed);
+                // if search is not empt, return MaxClockSpeed.
                 return clockSpeed;
             }
-
+            // else return 0.
             return 0;
         }
     }
