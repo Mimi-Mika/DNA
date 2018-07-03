@@ -36,6 +36,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -56,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="DNA\Chunck.cs" />
     <Compile Include="Helper\ChunkParser.cs" />
+    <Compile Include="Helper\CPUMaxClockFrequency.cs" />
     <Compile Include="Helper\Deserializer.cs" />
     <Compile Include="Helper\Request.cs" />
     <Compile Include="Helper\Response.cs" />

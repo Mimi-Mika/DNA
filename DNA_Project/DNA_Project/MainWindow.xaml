@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Button Content="Orchestrator mode" HorizontalAlignment="Left" Margin="50,51,0,0" VerticalAlignment="Top" Width="698" Height="79" Click="Button_Click_Orchestrator"/>
+        <Button Content="Node mode" HorizontalAlignment="Left" Margin="50,283,0,0" VerticalAlignment="Top" Width="698" Height="88" Click="Button_Click_Node"/>
     </Grid>
 </Window>

@@ -8,6 +8,6 @@ namespace DNA_Project.Helper
 {
     class Connect
     {
-
+        //Port : use port 54321 for communication, he is free.
     }
 }
