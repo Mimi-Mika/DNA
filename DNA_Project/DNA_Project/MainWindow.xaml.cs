@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DNA_Project.DNA;
 using DNA_Project.Helper;
 
 
@@ -41,13 +42,17 @@ namespace DNA_Project
         private void Button_Click_Node(object sender, RoutedEventArgs e)
         {
             // Node Mode
+            Node node = new Node("IPaddr",54321,"IPaddr",54321);
+
             // Call Node view
 
 
             // Show Node hardware & network infos
-            MessageBox.Show("Node Mode \nProcessor Number : " + Environment.ProcessorCount
+            MessageBox.Show("Node Mode \nProcessor Threads Number : " + node.cpuInfos.maxThreads
                 + "\nIP Addr : " + LocalIPAddress.GetLocalIPAddress()
-                + "\n Max clock speed per core: " + CPUMaxClockFrequency.GetCPUMaxClockFrequency());
+                + "\n Max clock speed per core: " + node.cpuInfos.maxClockFrequency
+                + "\nPerformance index : " + node.cpuInfos.performanceIndex
+                + "\nCPU Usage : " + node.cpuInfos.GetCpuUsage());
         }
     }
 }

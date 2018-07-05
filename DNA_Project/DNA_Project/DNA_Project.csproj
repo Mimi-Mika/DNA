@@ -34,6 +34,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
+    <Reference Include="StreamJsonRpc, Version=1.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Management" />
@@ -57,13 +59,14 @@
     </ApplicationDefinition>
     <Compile Include="DNA\Chunck.cs" />
     <Compile Include="Helper\ChunkParser.cs" />
-    <Compile Include="Helper\CPUMaxClockFrequency.cs" />
+    <Compile Include="Helper\CPUInfos.cs" />
     <Compile Include="Helper\Deserializer.cs" />
-    <Compile Include="Helper\Request.cs" />
-    <Compile Include="Helper\Response.cs" />
+    <Compile Include="Helper\LocalIPAddress.cs" />
+    <Compile Include="Helper\StateEnum.cs" />
+    <Compile Include="Helper\WorkEnum.cs" />
+    <Compile Include="Models\RequestResponse.cs" />
     <Compile Include="Helper\Serializer.cs" />
     <Compile Include="Helper\Connect.cs" />
-    <Compile Include="DNA\Thread.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

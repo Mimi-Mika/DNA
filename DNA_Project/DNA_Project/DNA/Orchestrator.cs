@@ -10,9 +10,10 @@ namespace DNA_Project.DNA
 {
     class Orchestrator
     {
-        String ip;
-        int port;
-        List<Node> nodes;
+        String ipAddr;
+        int socketPort;
 
+        List<Node> nodes;
+        Byte fileData;
     }
 }

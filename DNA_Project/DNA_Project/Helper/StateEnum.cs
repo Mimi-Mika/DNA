@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace DNA_Project.Helper
 {
-    public enum StateEnum { STANDBY, WORKING, ERROR }
+    public enum StateEnum { AVAILABLE, WORKING, DONE, ERROR }
 }

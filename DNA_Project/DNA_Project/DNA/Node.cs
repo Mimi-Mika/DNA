@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DNA_Project.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,12 +9,28 @@ namespace DNA_Project.DNA
 {
     class Node
     {
-        String ip;
-        int socket => 54321;
-        String ipAddrServer;
-        int socketPortServer;
-        int state;
-        float performanceIndex;
+        public String ipAddr { get; }
+        public int socketPort { get; }
+        public String ipAddrServer { get; }
+        public int socketPortServer { get; }
+        public StateEnum state { get; set; }
+        public CPUInfos cpuInfos { get; }
+        public Chunck chunck;
+
+
+        public Node(String ipAddr, int socketPort, String ipAddrServer, int socketPortServer)
+        {
+            this.ipAddr = ipAddr;
+            this.socketPort = socketPort;
+            this.ipAddrServer = ipAddrServer;
+            this.socketPortServer = socketPortServer;
+            cpuInfos = new CPUInfos();
+
+            state = StateEnum.AVAILABLE;
+        }
+
+
+
 
     }
 }
