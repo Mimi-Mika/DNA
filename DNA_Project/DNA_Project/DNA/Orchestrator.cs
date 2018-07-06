@@ -14,6 +14,11 @@ namespace DNA_Project.DNA
         int socketPort;
 
         List<Node> nodes;
-        Byte fileData;
+        List<Chunck> chuncks;
+        Byte [] fileData;
+
     }
+
+
+
 }

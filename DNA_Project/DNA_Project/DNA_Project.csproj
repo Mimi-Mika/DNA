@@ -58,13 +58,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DNA\Chunck.cs" />
-    <Compile Include="Helper\ChunkParser.cs" />
     <Compile Include="Helper\CPUInfos.cs" />
     <Compile Include="Helper\Deserializer.cs" />
     <Compile Include="Helper\LocalIPAddress.cs" />
     <Compile Include="Helper\StateEnum.cs" />
     <Compile Include="Helper\WorkEnum.cs" />
-    <Compile Include="Models\RequestResponse.cs" />
+    <Compile Include="Models\GenomeClass.cs" />
+    <Compile Include="Models\QuantitativeClass.cs" />
+    <Compile Include="Models\GenomeResponse.cs" />
+    <Compile Include="Models\Request.cs" />
     <Compile Include="Helper\Serializer.cs" />
     <Compile Include="Helper\Connect.cs" />
     <Page Include="MainWindow.xaml">
@@ -83,6 +85,8 @@
   <ItemGroup>
     <Compile Include="DNA\Node.cs" />
     <Compile Include="DNA\Orchestrator.cs" />
+    <Compile Include="Models\QuantitativeResponse.cs" />
+    <Compile Include="Models\StringResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

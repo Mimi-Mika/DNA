@@ -1,10 +1,7 @@
 ﻿using DNA_Project.Helper;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-
 namespace DNA_Project.DNA
 {
     class Node
@@ -25,12 +22,22 @@ namespace DNA_Project.DNA
             this.ipAddrServer = ipAddrServer;
             this.socketPortServer = socketPortServer;
             cpuInfos = new CPUInfos();
+            chunck = new Chunck();
 
             state = StateEnum.AVAILABLE;
+
+            //For test ONLY !
+            chunck.rawDatas = System.IO.File.ReadAllLines(@"C:\Users\mpauly\Documents\CESI RILA\Projet C# DNA\DNA-Data\genome-greshake.txt");
+            ParseRawChunkParallel();
         }
 
-
-
-
+        public void ParseRawChunkParallel()
+        {
+            Parallel.ForEach(chunck.rawDatas, line =>
+            {
+                // Add here algorithm.
+                //line = line.Substring(line.Length, -2);
+            });
+        }
     }
 }

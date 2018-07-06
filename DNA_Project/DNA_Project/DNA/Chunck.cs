@@ -8,10 +8,11 @@ namespace DNA_Project.DNA
 {
     class Chunck
     {
-        public int id;
-        public int firstBytePosition;
-        public int lastBytePosition;
-        public string datas;
-
+        public int id { get; set; }
+        public int firstBytePosition { get; set; }
+        public int lastBytePosition { get; set; }
+        public string [] rawDatas { get; set; }
+        public string parsedDatas { get; set; }
+        
     }
 }
