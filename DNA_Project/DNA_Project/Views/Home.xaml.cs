@@ -17,6 +17,8 @@ using System.Windows.Shapes;
 using DNA_Project.DNA;
 using DNA_Project.Helper;
 
+
+
 namespace DNA_Project
 {
     /// <summary>
@@ -34,14 +36,16 @@ namespace DNA_Project
             // Orchestrator Mode
             // Call Orchestrator view
             MessageBox.Show("Orchestrator Mode");
-        }
 
+
+        }
         private void Button_Click_Node(object sender, RoutedEventArgs e)
         {
             // Node Mode
-            Node node = new Node("IPaddr", 54321, "IPaddr", 54321);
+            Node node = new Node("IPaddr",54321,"IPaddr",54321);
 
             // Call Node view
+
 
             // Show Node hardware & network infos
             MessageBox.Show("Node Mode \nProcessor Threads Number : " + node.cpuInfos.maxThreads
