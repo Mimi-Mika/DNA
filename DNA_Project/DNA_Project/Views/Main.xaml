@@ -9,7 +9,7 @@
     <Grid>
         <Image HorizontalAlignment="Left" Height="60" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Source="../Images/logo.png" />
         <TabControl HorizontalAlignment="Left" Height="334" Margin="10,75,0,0" VerticalAlignment="Top" Width="772">
-            <TabItem Header="Client" Height="22" VerticalAlignment="Bottom">
+            <TabItem Header="Client" Height="22" VerticalAlignment="Bottom" x:Name="tabClient">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="65*" />
@@ -18,17 +18,17 @@
                         <ColumnDefinition Width="472*" />
                     </Grid.ColumnDefinitions>
                     <Label Content="Adresse cluster :" Margin="6,16,182,0" VerticalAlignment="Top" Width="106" HorizontalAlignment="Center" Height="26" TextElement.Foreground="DodgerBlue" TextElement.FontWeight="Bold" Grid.ColumnSpan="3" />
-                    <TextBox x:Name="adress" Height="23" Margin="33,19,22,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" HorizontalAlignment="Center"  BorderBrush="DodgerBlue" Grid.Column="2" />
+                    <TextBox x:Name="adressclient" Height="23" Margin="33,19,22,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" HorizontalAlignment="Center"  BorderBrush="DodgerBlue" Grid.Column="2" />
                     <Label Content="Port cluster :" Margin="6,44,182,0" VerticalAlignment="Top" Width="106" HorizontalAlignment="Center" Height="26" TextElement.Foreground="DodgerBlue" TextElement.FontWeight="Bold" Grid.ColumnSpan="3" />
-                    <TextBox x:Name="port" Height="23" Margin="33,47,22,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" HorizontalAlignment="Center" BorderBrush="DodgerBlue" Grid.Column="2" />
+                    <TextBox x:Name="portClient" Height="23" Margin="33,47,22,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" HorizontalAlignment="Center" BorderBrush="DodgerBlue" Grid.Column="2" />
 
-                    <Button Content="Se connecter au serveur" Click="BtnClickConnectClient" HorizontalAlignment="Left" VerticalAlignment="Top" Width="160" Margin="33,86,0,0" Background="DodgerBlue" BorderBrush="White" TextElement.Foreground="White" TextElement.FontWeight="Bold" Grid.Column="2" />
+                    <Button x:Name="connectClient" Content="Se connecter au serveur" Click="BtnClickConnectClient" HorizontalAlignment="Left" VerticalAlignment="Top" Width="160" Margin="33,86,0,0" Background="DodgerBlue" BorderBrush="White" TextElement.Foreground="White" TextElement.FontWeight="Bold" Grid.Column="2" />
 
                     <Label Content="Logs :" Margin="10,16,356,0" VerticalAlignment="Top" Width="106" HorizontalAlignment="Center" Height="26" Grid.Column="3" TextElement.Foreground="DodgerBlue" TextElement.FontWeight="Bold" />
-                    <TextBox HorizontalAlignment="Left" Height="246" IsEnabled="False" TextWrapping="Wrap" VerticalAlignment="Top" Width="440" Grid.Column="3" Margin="22,48,0,0" BorderBrush="DodgerBlue" />
+                    <TextBox x:Name="logClient" HorizontalAlignment="Left" Height="246" IsEnabled="False" TextWrapping="Wrap" VerticalAlignment="Top" Width="440" Grid.Column="3" Margin="22,48,0,0" BorderBrush="DodgerBlue" />
                 </Grid>
             </TabItem>
-            <TabItem Header="Serveur">
+            <TabItem Header="Serveur" x:Name="tabServer">
                 <Grid Background="#FFE5E5E5" Margin="0,0,0,-3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="9*" />
@@ -37,14 +37,14 @@
                         <ColumnDefinition Width="449*" />
                     </Grid.ColumnDefinitions>
                     <Label Content="Adresse cluster :" Margin="6,17,205,0" VerticalAlignment="Top" Width="106" HorizontalAlignment="Center" Height="26" TextElement.Foreground="DodgerBlue" TextElement.FontWeight="Bold" Grid.ColumnSpan="3" />
-                    <TextBox x:Name="adress_server" IsEnabled="False" Height="23" Margin="97,20,41,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" HorizontalAlignment="Center"  BorderBrush="DodgerBlue" Grid.Column="2" />
+                    <TextBox x:Name="adressServer" IsEnabled="False" Height="23" Margin="97,20,41,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" HorizontalAlignment="Center"  BorderBrush="DodgerBlue" Grid.Column="2" />
                     <Label Content="Port cluster :" Margin="6,45,205,0" VerticalAlignment="Top" Width="106" HorizontalAlignment="Center" Height="26" TextElement.Foreground="DodgerBlue" TextElement.FontWeight="Bold" Grid.ColumnSpan="3" />
-                    <TextBox x:Name="port_server" IsEnabled="False" Height="23" Margin="97,48,41,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" HorizontalAlignment="Center" BorderBrush="DodgerBlue" Grid.Column="2" />
+                    <TextBox x:Name="portServer" IsEnabled="False" Height="23" Margin="97,48,41,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" HorizontalAlignment="Center" BorderBrush="DodgerBlue" Grid.Column="2" />
 
-                    <Button Content="Connecter le serveur" Click="BtnClickConnectServer" HorizontalAlignment="Left" VerticalAlignment="Top" Width="160" Margin="97,89,0,0" Background="DodgerBlue" BorderBrush="White" TextElement.Foreground="White" TextElement.FontWeight="Bold" Grid.Column="2" />
+                    <Button x:Name="connectServer" Content="Connecter le serveur" Click="BtnClickConnectServer" HorizontalAlignment="Left" VerticalAlignment="Top" Width="160" Margin="97,89,0,0" Background="DodgerBlue" BorderBrush="White" TextElement.Foreground="White" TextElement.FontWeight="Bold" Grid.Column="2" />
 
                     <Label Content="Logs :" Margin="297,17,344,0" VerticalAlignment="Top" Width="106" HorizontalAlignment="Center" Height="26" TextElement.Foreground="DodgerBlue" TextElement.FontWeight="Bold" Grid.Column="2" Grid.ColumnSpan="2" />
-                    <TextBox HorizontalAlignment="Left" Height="249" IsEnabled="False" TextWrapping="Wrap" VerticalAlignment="Top" Width="440" Margin="297,48,0,0" BorderBrush="DodgerBlue" Grid.Column="2" Grid.ColumnSpan="2" />
+                    <TextBox x:Name="logServer" HorizontalAlignment="Left" Height="249" IsEnabled="False" TextWrapping="Wrap" VerticalAlignment="Top" Width="440" Margin="297,48,0,0" BorderBrush="DodgerBlue" Grid.Column="2" Grid.ColumnSpan="2" />
                 </Grid>
             </TabItem>
         </TabControl>

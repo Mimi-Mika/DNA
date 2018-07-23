@@ -27,16 +27,45 @@ namespace DNA_Project.Views
         public Main()
         {
             InitializeComponent();
+            String adressIP = LocalIPAddress.GetLocalIPAddress();
+            if (adressIP != null && adressIP != "")
+            {
+                adressServer.Text = adressIP;
+            }
+            else
+            {
+                logServer.Text = "Error when retrieving the IP address !";
+                connectServer.IsEnabled = false;
+            }
+            portServer.Text = "54321";
         }
 
         private void BtnClickConnectClient(object sender, RoutedEventArgs e)
         {
+            Boolean connect = false;
+            // TODO : action connect client
             MessageBox.Show("Client connecté");
+
+            if (connect)
+            {
+                tabServer.IsEnabled = false;
+                connectServer.IsEnabled = false;
+            }
         }
 
         private void BtnClickConnectServer(object sender, RoutedEventArgs e)
         {
+            Boolean connect = false;
+            // TODO : action connect server
             MessageBox.Show("Serveur connecté");
+
+            if (connect)
+            {
+                tabClient.IsEnabled = false;
+                adressclient.IsEnabled = false;
+                portClient.IsEnabled = false;
+                connectClient.IsEnabled = false;
+            }
         }
     }
 }
