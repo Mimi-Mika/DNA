@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,6 +29,11 @@ namespace DNA_Project
     {
         private Boolean connect;
         private OpenFileDialog dlg;
+        private Orchestrator server;
+        private Socket socketConnection;
+        private static ManualResetEvent connectDone = new ManualResetEvent(false);
+        private static ManualResetEvent sendBegin = new ManualResetEvent(false);
+        private static ManualResetEvent sendDone = new ManualResetEvent(false);
 
         public MainWindow()
         {
@@ -35,82 +41,165 @@ namespace DNA_Project
 
             if (!this.connect)
             {
-                urlFile.IsEnabled = false;
-                browse.IsEnabled = false;
                 if (urlFile == null || urlFile.Text == "")
                 {
                     fileOk.IsEnabled = false;
                 }
             }
-
-            String adressIP = LocalIPAddress.GetLocalIPAddress();
-            if (adressIP != null && adressIP != "")
-            {
-                adressServer.Text = adressIP;
-            }
-            else
-            {
-                logServer.Text += "Error when retrieving the IP address !";
-                connectServer.IsEnabled = false;
-            }
-            portServer.Text = "54321";
         }
 
         // Orchestrator Mode
         private void BtnClickConnectClient(object sender, RoutedEventArgs e)
         {
-            // TODO : action connect client
-            MessageBox.Show("Orchestrator Mode");
-
-            if (this.connect)
+            int port;
+            if (int.TryParse(portClient.Text, out port))
             {
-                tabServer.IsEnabled = false;
-                connectServer.IsEnabled = false;
+                server = new Orchestrator(port);
+                IPEndPoint localIpEndPoint = server.SocketServer.LocalEndPoint as IPEndPoint;
+                if (localIpEndPoint != null)
+                {
+                    connect = true;
+                    tabServer.IsEnabled = false;
+                    connectServer.IsEnabled = false;
 
-                logClient.Text += "Client connecté !";
+                    logClient.Text = "Serveur démarré !";
+                    logClient.Text += Environment.NewLine;
+                    logClient.Text += "Adresse ip du cluster : " + localIpEndPoint.Address + " (localhost)";
+                    logClient.Text += Environment.NewLine;
+                    logClient.Text += "Port du cluster : " + localIpEndPoint.Port;
+                }
+                else
+                {
+                    logClient.Text = "Erreur impossible de démarré le serveur, vérifiez que le port est disponible !";
+                }
+            }
+            else
+            {
+                logClient.Text = "Le port doit etre un numéro !";
             }
         }
 
         // Node Mode
         private void BtnClickConnectServer(object sender, RoutedEventArgs e)
         {
-            // TODO : action connect server
-            MessageBox.Show("Node Mode");
+            System.Net.IPAddress ipAdress = null;
+            int port;
 
-            //TODO
-            this.connect = true;
-
-            /* // Node Mode
-            Node node = new Node("IPaddr", 54321, "IPaddr", 54321);
-
-             // Show Node hardware & network infos
-             MessageBox.Show("Node Mode \nProcessor Threads Number : " + node.cpuInfos.maxThreads
-                 + "\nIP Addr : " + LocalIPAddress.GetLocalIPAddress()
-                 + "\n Max clock speed per core: " + node.cpuInfos.maxClockFrequency
-                 + "\nPerformance index : " + node.cpuInfos.performanceIndex
-                 + "\nCPU Usage : " + node.cpuInfos.GetCpuUsage());*/
-
-            if (this.connect)
+            if (IPAddress.TryParse(adressServer.Text, out ipAdress) && int.TryParse(portServer.Text, out port))
             {
+                logServer.Text += "Connexion en cours";
+                logServer.Text += Environment.NewLine;
+
+                IPEndPoint remoteEP = new IPEndPoint(ipAdress, port);
+
+                // Create a TCP/IP socket.
+                socketConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                // Connect to the remote endpoint.
+                socketConnection.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), socketConnection);
+                connectDone.WaitOne();
+
+                connect = true;
+
                 tabClient.IsEnabled = false;
-                adressclient.IsEnabled = false;
                 portClient.IsEnabled = false;
                 connectClient.IsEnabled = false;
                 urlFile.IsEnabled = true;
                 browse.IsEnabled = true;
 
-                logServer.Text += "Serveur connecté !";
+                logServer.Text += "Connecté au serveur !";
+                logServer.Text += Environment.NewLine;
+            }
+            else
+            {
+                logServer.Text += "Valeurs incorrectes (ip /port)";
+                logServer.Text += Environment.NewLine;
+            }
+        }
+
+        private void ConnectCallback(IAsyncResult ar)
+        {
+            try
+            {
+                // Retrieve the socket from the state object.
+                Socket client = (Socket)ar.AsyncState;
+
+                // Complete the connection.
+                client.EndConnect(ar);
+
+                // Signal that the connection has been made.
+                connectDone.Set();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
             }
         }
 
         private void BtnClickFileOk(object sender, RoutedEventArgs e)
         {
-            // TODO : action add file
-            MessageBox.Show("File ok");
-
             if (urlFile != null && urlFile.Text != "")
             {
-                logServer.Text += "Fichier ajouté !";
+                logServer.Text += "Envoie du fichier au serveur, patientez...";
+                logServer.Text += Environment.NewLine;
+
+                byte[] byteData = File.ReadAllBytes(urlFile.Text);
+                // Convert the string data to byte data using ASCII encoding.
+                // Begin sending the data to the remote device.
+                socketConnection.BeginSend(byteData, 0, byteData.Length, 0,
+                    new AsyncCallback(SendCallback), socketConnection);
+                sendBegin.WaitOne();
+
+                byte[] endFile = Encoding.UTF8.GetBytes("<EOF>");
+                socketConnection.BeginSend(endFile, 0, endFile.Length, 0,
+                    new AsyncCallback(EndSendCallback), socketConnection);
+
+                sendDone.WaitOne();
+                logServer.Text += "Envoie de fichier terminé, Traitement en cours, patientez ...";
+                logServer.Text += Environment.NewLine;
+            }
+            else
+            {
+                logServer.Text += "Fichier introuvable";
+                logServer.Text += Environment.NewLine;
+            }
+        }
+
+        private static void SendCallback(IAsyncResult ar)
+        {
+            try
+            {
+                // Retrieve the socket from the state object.
+                Socket client = (Socket)ar.AsyncState;
+
+                // Complete sending the data to the remote device.
+                int bytesSent = client.EndSend(ar);
+
+                // Signal that all bytes have been sent.
+                sendBegin.Set();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+        private static void EndSendCallback(IAsyncResult ar)
+        {
+            try
+            {
+                // Retrieve the socket from the state object.
+                Socket client = (Socket)ar.AsyncState;
+
+                // Complete sending the data to the remote device.
+                int bytesSent = client.EndSend(ar);
+
+                // Signal that all bytes have been sent.
+                sendDone.Set();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
             }
         }
 
