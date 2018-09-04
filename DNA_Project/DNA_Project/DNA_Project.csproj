@@ -76,6 +76,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DNA\Chunck.cs" />
+    <Compile Include="DNA\CountBases.cs" />
     <Compile Include="DNA\Module1.cs" />
     <Compile Include="DNA\Module2.cs" />
     <Compile Include="DNA\StateObject.cs" />

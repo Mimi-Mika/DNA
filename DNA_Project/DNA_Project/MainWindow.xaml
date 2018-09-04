@@ -21,7 +21,7 @@
                     </Grid.ColumnDefinitions>
                     <Rectangle Fill="White" Height="113" Margin="6,9,0,0" Stroke="DodgerBlue" VerticalAlignment="Top" Grid.ColumnSpan="3" StrokeThickness="2" />
                     <Label Content="Port cluster :" Margin="6,44,182,0" VerticalAlignment="Top" Width="106" HorizontalAlignment="Center" Height="26" TextElement.Foreground="DodgerBlue" TextElement.FontWeight="Bold" Grid.ColumnSpan="3" />
-                    <TextBox x:Name="portClient" Height="23" Margin="33,47,22,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" HorizontalAlignment="Center" BorderBrush="DodgerBlue" Grid.Column="2" />
+                    <TextBox x:Name="portClient" Height="23" Margin="33,47,22,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" HorizontalAlignment="Center" BorderBrush="DodgerBlue" Grid.Column="2" Text="12345"/>
 
                     <Button x:Name="connectClient" Content="Démarrer le serveur" Click="BtnClickConnectClient" HorizontalAlignment="Left" VerticalAlignment="Top" Width="160" Margin="33,86,0,0" Background="DodgerBlue" BorderBrush="White" TextElement.Foreground="White" TextElement.FontWeight="Bold" Grid.Column="2" />
 
@@ -40,9 +40,9 @@
 
                     <Rectangle Fill="White" Height="113" Margin="6,9,20,0" Stroke="DodgerBlue" VerticalAlignment="Top" Grid.ColumnSpan="3" StrokeThickness="2" />
                     <Label Content="Adresse cluster :" Margin="6,17,205,0" VerticalAlignment="Top" Width="106" HorizontalAlignment="Center" Height="26" TextElement.Foreground="DodgerBlue" TextElement.FontWeight="Bold" Grid.ColumnSpan="3" />
-                    <TextBox x:Name="adressServer"  Height="23" Margin="97,20,41,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" HorizontalAlignment="Center"  BorderBrush="DodgerBlue" Grid.Column="2" />
+                    <TextBox x:Name="adressServer"  Height="23" Margin="97,20,41,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" HorizontalAlignment="Center"  BorderBrush="DodgerBlue" Grid.Column="2" Text="192.168.56.1"/>
                     <Label Content="Port cluster :" Margin="6,45,205,0" VerticalAlignment="Top" Width="106" HorizontalAlignment="Center" Height="26" TextElement.Foreground="DodgerBlue" TextElement.FontWeight="Bold" Grid.ColumnSpan="3" />
-                    <TextBox x:Name="portServer" Height="23" Margin="97,48,41,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" HorizontalAlignment="Center" BorderBrush="DodgerBlue" Grid.Column="2" />
+                    <TextBox x:Name="portServer" Height="23" Margin="97,48,41,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" HorizontalAlignment="Center" BorderBrush="DodgerBlue" Grid.Column="2" Text="12345"/>
 
                     <Button x:Name="connectServer" Content="Connecter le serveur" Click="BtnClickConnectServer" HorizontalAlignment="Left" VerticalAlignment="Top" Width="160" Margin="97,89,0,0" Background="DodgerBlue" BorderBrush="White" TextElement.Foreground="White" TextElement.FontWeight="Bold" Grid.Column="2" />
 

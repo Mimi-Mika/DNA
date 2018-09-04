@@ -142,6 +142,7 @@ namespace DNA_Project
             {
                 logServer.Text += "Envoie du fichier au serveur, patientez...";
                 logServer.Text += Environment.NewLine;
+                // TODO MAP
 
                 byte[] byteData = File.ReadAllBytes(urlFile.Text);
                 // Convert the string data to byte data using ASCII encoding.
@@ -157,6 +158,9 @@ namespace DNA_Project
                 sendDone.WaitOne();
                 logServer.Text += "Envoie de fichier terminé, Traitement en cours, patientez ...";
                 logServer.Text += Environment.NewLine;
+
+                // TODO REDUCE
+                // RECEIVE RESULT & COMPUTE
             }
             else
             {

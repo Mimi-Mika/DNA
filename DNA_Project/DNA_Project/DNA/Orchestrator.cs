@@ -35,15 +35,25 @@ namespace DNA_Project.DNA
             //fileData = new List<string>();
 
             // Start server mode here to listen new connexion
-            SocketServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            try
+            {
+                SocketServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            SocketServer.Bind(new IPEndPoint(LocalIPAddress.GetLocalIPAddressV2(), _port));
-            SocketServer.Listen(1);
+                SocketServer.Bind(new IPEndPoint(LocalIPAddress.GetLocalIPAddressV2(), _port));
+                SocketServer.Listen(1);
 
-            SocketServer.BeginAccept(new AsyncCallback(this.connexionAcceptCallback), SocketServer);
+                SocketServer.BeginAccept(new AsyncCallback(this.connexionAcceptCallback), SocketServer);
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
-            mod1 = new Module1();
-            mod2 = new Module2();
+
             //TODO Creer les nodes et s'y connecte
             /* Creer des classes modules, héritant de la classe Node
              * Chaque module est un node  qui  realise le traitement demandé dans le sujet (module 1 réponds à l'énnoncé de module 1)
@@ -52,21 +62,26 @@ namespace DNA_Project.DNA
         }
 
         // Start work
-        public async void Process(String content)
+        public async Task<Object> Process(String content)
         {
-            Console.WriteLine("Read {0} bytes from socket. \n Data : {1}");
+            mod1 = new Module1();
+            //mod2 = new Module2();
+
             var process1Task = mod1.Process(content);
-            var process2Task = mod2.Process(content);
+            //var process2Task = mod2.Process(content);
             //TODO a completer
 
-            await Task.WhenAll(process1Task, process2Task);
+            await Task.WhenAll(process1Task);
+            //await Task.WhenAll(process1Task, process2Task);
 
-            Object resMod1 = await process1Task;
-            Object resMod2 = await process2Task;
+            var resMod1 = await process1Task;
+            //Object resMod2 = await process2Task;
 
             //dataLines = System.IO.File.ReadAllLines(filename).ToList();
 
             //TODO Envoyer à chaque node le contenue du fichier
+
+            return resMod1;
         }
 
         private void connexionAcceptCallback(IAsyncResult ar)
@@ -84,7 +99,7 @@ namespace DNA_Project.DNA
             //SocketsClient.Add(SocketServer.EndAccept(ar));
         }
 
-        public void ReadCallback(IAsyncResult ar)
+        public async void ReadCallback(IAsyncResult ar)
         {
             String content = String.Empty;
 
@@ -104,14 +119,18 @@ namespace DNA_Project.DNA
                 // Check for end-of-file tag. If it is not there, read
                 // more data.
                 content = state.sb.ToString();
-                Console.WriteLine("C PAS FINI");
                 if (content.IndexOf("<EOF>") > -1)
                 {
                     // All the data has been read from the
                     //Console.WriteLine("Read {0} bytes from socket. \n Data : {1}",
                     //content.Length, content);
                     Console.WriteLine("C FINI");
-                    Process(content);
+                    content.Replace("<EOF>", "");
+
+                    Object countbases = await Process(content);
+                    Console.WriteLine(countbases.ToString());
+                    // TODO Send response here
+                    // & listen for next datas
                 }
                 else
                 {

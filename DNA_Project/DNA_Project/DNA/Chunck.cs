@@ -6,13 +6,30 @@ using System.Threading.Tasks;
 
 namespace DNA_Project.DNA
 {
-    class Chunck
+    public class Chunck
     {
-        public int id { get; set; }
-        public int firstBytePosition { get; set; }
-        public int lastBytePosition { get; set; }
-        public string [] rawDatas { get; set; }
-        public string parsedDatas { get; set; }
-        
+        public string id { get; }
+        public int chromosome { get;  }
+        public long position { get; }
+        public string genotype { get; }
+
+        public Chunck(string str)
+        {
+            int outInt;
+        long outLong;
+            //Parse data & store in chunck
+            string[] split = str.Split('\t');
+            this.id = split[0];
+
+            Int32.TryParse(split[1], out outInt);
+            chromosome = outInt;
+            long.TryParse(split[2], out outLong);
+            position = outLong;
+            genotype = split[3];
+        }
     }
+
+
+
+
 }
