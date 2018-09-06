@@ -173,11 +173,12 @@ namespace DNA_Project
                 int i = 0;
                 int j = 0;
                 char[] MyChar = { ' ' };
+                object[] result = new object[lines.Count()]; 
                 while (lines.Count() != i)
                 {
   
-                    strToSend.Append(lines[i].Replace(" ", ""));
-                    Console.WriteLine(lines[i].Replace(" ", ""));
+                    strToSend.Append(lines[i]/*.Replace(" ", "")*/);
+                    //Console.WriteLine(lines[i].Replace(" ", ""));
 
                     //Converte string to byte array
                     byteData = Encoding.UTF8.GetBytes(strToSend.ToString());
@@ -191,21 +192,25 @@ namespace DNA_Project
                     socketConnection.BeginSend(endFile, 0, endFile.Length, 0, new AsyncCallback(EndSendCallback), socketConnection);
 
                     sendDone.WaitOne();
-                    logServer.Text += "Envoie de fichier terminé, Traitement en cours, patientez ...";
-                    logServer.Text += Environment.NewLine;
 
                     // TODO REDUCE
                     //Receive resulte
+                    result[i] = server.Process(lines[i]);
 
-                    //Reduce
 
                     // increment i + 500
                     i = i+1;
                     strToSend.Clear();
                 }
-                // RECEIVE RESULT & COMPUTE
+                logServer.Text += "Envoie de fichier terminé, Traitement en cours, patientez ...";
+                logServer.Text += Environment.NewLine;
+                // RECEIVE RESULT and reduce this & COMPUTE
+                //results
+                //logServer.Text += result;
+                //logServer.Text += Environment.NewLine;
 
-            }else{
+            }
+            else{
                 logServer.Text += "Fichier introuvable";
                 logServer.Text += Environment.NewLine;
             }
