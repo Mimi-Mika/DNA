@@ -140,7 +140,7 @@ namespace DNA_Project
         {
             if (urlFile != null && urlFile.Text != "")
             {
-                logServer.Text += "Envoie du fichier au serveur, patientez...";
+                /*logServer.Text += "Envoie du fichier au serveur, patientez...";
                 logServer.Text += Environment.NewLine;
                 // TODO MAP
 
@@ -160,10 +160,52 @@ namespace DNA_Project
                 logServer.Text += Environment.NewLine;
 
                 // TODO REDUCE
+                // RECEIVE RESULT & COMPUTE*/
+ 
+                logServer.Text += "Envoie du fichier au serveur, patientez...";
+                logServer.Text += Environment.NewLine;
+
+                // MAP
+                byte[] byteData;
+                String[] lines = File.ReadAllLines(urlFile.Text);
+                StringBuilder strToSend = new StringBuilder();
+
+                int i = 0;
+                int j = 0;
+                char[] MyChar = { ' ' };
+                while (lines.Count() != i)
+                {
+  
+                    strToSend.Append(lines[i].Replace(" ", ""));
+                    Console.WriteLine(lines[i].Replace(" ", ""));
+
+                    //Converte string to byte array
+                    byteData = Encoding.UTF8.GetBytes(strToSend.ToString());
+                    //Send byte array
+                    // Convert the string data to byte data using ASCII encoding.
+                    // Begin sending the data to the remote device.
+                    socketConnection.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), socketConnection);
+                    sendBegin.WaitOne();
+
+                    byte[] endFile = Encoding.UTF8.GetBytes("<EOF>");
+                    socketConnection.BeginSend(endFile, 0, endFile.Length, 0, new AsyncCallback(EndSendCallback), socketConnection);
+
+                    sendDone.WaitOne();
+                    logServer.Text += "Envoie de fichier terminé, Traitement en cours, patientez ...";
+                    logServer.Text += Environment.NewLine;
+
+                    // TODO REDUCE
+                    //Receive resulte
+
+                    //Reduce
+
+                    // increment i + 500
+                    i = i+1;
+                    strToSend.Clear();
+                }
                 // RECEIVE RESULT & COMPUTE
-            }
-            else
-            {
+
+            }else{
                 logServer.Text += "Fichier introuvable";
                 logServer.Text += Environment.NewLine;
             }
