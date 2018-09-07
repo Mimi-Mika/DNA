@@ -4,10 +4,12 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using DNA_Project.DNA;
 using DNA_Project.Helper;
+using DNA_Project.Comm;
 
 namespace DNA_Project.DNA
 {
@@ -20,6 +22,8 @@ namespace DNA_Project.DNA
         //private List<String> dataLines;
 
         public Socket SocketServer { get; private set; }
+        private static ManualResetEvent sendBegin = new ManualResetEvent(false);
+        private static ManualResetEvent sendDone = new ManualResetEvent(false);
         private Module1 mod1;
         private Module2 mod2;
         //private List<Socket> SocketsClient;
@@ -41,7 +45,6 @@ namespace DNA_Project.DNA
 
                 SocketServer.Bind(new IPEndPoint(LocalIPAddress.GetLocalIPAddressV2(), _port));
                 SocketServer.Listen(1);
-
                 SocketServer.BeginAccept(new AsyncCallback(this.connexionAcceptCallback), SocketServer);
             }
             catch (SocketException e)
@@ -128,9 +131,19 @@ namespace DNA_Project.DNA
                     content.Replace("<EOF>", "");
 
                     Object countbases = await Process(content);
-                    Console.WriteLine(countbases.ToString());
+                    //Console.WriteLine(countbases.ToString());
                     // TODO Send response here
                     // & listen for next datas
+                    byte[] bytesToSend = Encoding.UTF8.GetBytes(countbases.ToString());
+                    SocketServer.BeginSend(bytesToSend, 0, bytesToSend.Length, 0, new AsyncCallback(SendCallback), SocketServer);
+                    sendBegin.WaitOne();
+
+                    byte[] endFile = Encoding.UTF8.GetBytes("<EOF>");
+                    SocketServer.BeginSend(endFile, 0, endFile.Length, 0, new AsyncCallback(EndSendCallback), SocketServer);
+                    sendDone.WaitOne();
+
+                    SocketServer.Listen(1);
+                    SocketServer.BeginAccept(new AsyncCallback(this.connexionAcceptCallback), SocketServer);
                 }
                 else
                 {
@@ -138,6 +151,44 @@ namespace DNA_Project.DNA
                     handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReadCallback), state);
                 }
+            }
+        }
+
+        private static void SendCallback(IAsyncResult ar)
+        {
+            try
+            {
+                // Retrieve the socket from the state object.
+                Socket client = (Socket)ar.AsyncState;
+
+                // Complete sending the data to the remote device.
+                int bytesSent = client.EndSend(ar);
+
+                // Signal that all bytes have been sent.
+                sendBegin.Set();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+        private static void EndSendCallback(IAsyncResult ar)
+        {
+            try
+            {
+                // Retrieve the socket from the state object.
+                Socket client = (Socket)ar.AsyncState;
+
+                // Complete sending the data to the remote device.
+                int bytesSent = client.EndSend(ar);
+
+                // Signal that all bytes have been sent.
+                sendDone.Set();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
             }
         }
     }

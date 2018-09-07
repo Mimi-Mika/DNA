@@ -23,7 +23,7 @@
                     <Label Content="Port cluster :" Margin="6,44,182,0" VerticalAlignment="Top" Width="106" HorizontalAlignment="Center" Height="26" TextElement.Foreground="DodgerBlue" TextElement.FontWeight="Bold" Grid.ColumnSpan="3" />
                     <TextBox x:Name="portClient" Height="23" Margin="33,47,22,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" HorizontalAlignment="Center" BorderBrush="DodgerBlue" Grid.Column="2" Text="12345"/>
 
-                    <Button x:Name="connectClient" Content="Démarrer le serveur" Click="BtnClickConnectClient" HorizontalAlignment="Left" VerticalAlignment="Top" Width="160" Margin="33,86,0,0" Background="DodgerBlue" BorderBrush="White" TextElement.Foreground="White" TextElement.FontWeight="Bold" Grid.Column="2" />
+                    <Button x:Name="connectClient" Content="Démarrer le serveur" Click="BtnClickStartServerAsync" HorizontalAlignment="Left" VerticalAlignment="Top" Width="160" Margin="33,86,0,0" Background="DodgerBlue" BorderBrush="White" TextElement.Foreground="White" TextElement.FontWeight="Bold" Grid.Column="2" />
 
                     <Label Content="Logs :" Margin="10,16,356,0" VerticalAlignment="Top" Width="106" HorizontalAlignment="Center" Height="26" Grid.Column="3" TextElement.Foreground="DodgerBlue" TextElement.FontWeight="Bold" />
                     <TextBox x:Name="logClient" HorizontalAlignment="Left" Height="246" IsEnabled="False" TextWrapping="Wrap" VerticalAlignment="Top" Width="440" Grid.Column="3" Margin="22,48,0,0" BorderBrush="DodgerBlue" />
@@ -44,7 +44,7 @@
                     <Label Content="Port cluster :" Margin="6,45,205,0" VerticalAlignment="Top" Width="106" HorizontalAlignment="Center" Height="26" TextElement.Foreground="DodgerBlue" TextElement.FontWeight="Bold" Grid.ColumnSpan="3" />
                     <TextBox x:Name="portServer" Height="23" Margin="97,48,41,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" HorizontalAlignment="Center" BorderBrush="DodgerBlue" Grid.Column="2" Text="12345"/>
 
-                    <Button x:Name="connectServer" Content="Connecter le serveur" Click="BtnClickConnectServer" HorizontalAlignment="Left" VerticalAlignment="Top" Width="160" Margin="97,89,0,0" Background="DodgerBlue" BorderBrush="White" TextElement.Foreground="White" TextElement.FontWeight="Bold" Grid.Column="2" />
+                    <Button x:Name="connectServer" Content="Connecter le serveur" Click="BtnClickConnectToServer" HorizontalAlignment="Left" VerticalAlignment="Top" Width="160" Margin="97,89,0,0" Background="DodgerBlue" BorderBrush="White" TextElement.Foreground="White" TextElement.FontWeight="Bold" Grid.Column="2" />
 
                     <Rectangle Fill="White" Height="146" Margin="6,151,20,0" Stroke="DodgerBlue" VerticalAlignment="Top" StrokeThickness="2" Grid.ColumnSpan="3" />
                     <Label Content="Document à analyser (.txt) :" Margin="1,151,129,0" VerticalAlignment="Top" Width="178" HorizontalAlignment="Center" Height="26" TextElement.Foreground="DodgerBlue" TextElement.FontWeight="Bold" Grid.ColumnSpan="2" Grid.Column="1" />

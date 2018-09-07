@@ -75,11 +75,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Comm\AsyncClient.cs" />
+    <Compile Include="Comm\AsyncServer.cs" />
+    <Compile Include="Comm\StateObject.cs" />
     <Compile Include="DNA\Chunck.cs" />
     <Compile Include="DNA\CountBases.cs" />
     <Compile Include="DNA\Module1.cs" />
     <Compile Include="DNA\Module2.cs" />
-    <Compile Include="DNA\StateObject.cs" />
     <Compile Include="Helper\CPUInfos.cs" />
     <Compile Include="Helper\Deserializer.cs" />
     <Compile Include="Helper\LocalIPAddress.cs" />
@@ -135,7 +137,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Comm\" />
     <Folder Include="GUI\" />
     <Folder Include="Images\" />
   </ItemGroup>

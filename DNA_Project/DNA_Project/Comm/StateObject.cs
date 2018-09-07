@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DNA_Project.DNA
+namespace DNA_Project.Comm
 {
     internal class StateObject
     {

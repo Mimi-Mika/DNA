@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DNA_Project.DNA;
+using DNA_Project.Comm;
 using DNA_Project.Helper;
 using Microsoft.Win32;
 
@@ -27,13 +28,15 @@ namespace DNA_Project
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Boolean connect;
+        private Boolean connect = false;
         private OpenFileDialog dlg;
-        private Orchestrator server;
-        private Socket socketConnection;
+        private AsyncServer orchestrator;
+        private AsynchronousClient client;
         private static ManualResetEvent connectDone = new ManualResetEvent(false);
         private static ManualResetEvent sendBegin = new ManualResetEvent(false);
         private static ManualResetEvent sendDone = new ManualResetEvent(false);
+        private System.Net.IPAddress ipAdress = null;
+        private int port;
 
         public MainWindow()
         {
@@ -49,90 +52,75 @@ namespace DNA_Project
         }
 
         // Orchestrator Mode
-        private void BtnClickConnectClient(object sender, RoutedEventArgs e)
+        private void BtnClickStartServerAsync(object sender, RoutedEventArgs e)
         {
-            int port;
-            if (int.TryParse(portClient.Text, out port))
+            if (!connect)
             {
-                server = new Orchestrator(port);
-                IPEndPoint localIpEndPoint = server.SocketServer.LocalEndPoint as IPEndPoint;
-                if (localIpEndPoint != null)
+                int port;
+                if (int.TryParse(portClient.Text, out port))
                 {
-                    connect = true;
-                    tabServer.IsEnabled = false;
-                    connectServer.IsEnabled = false;
+                    orchestrator = new AsyncServer(port);
+                    IPEndPoint localIpEndPoint = orchestrator.SocketServer.LocalEndPoint as IPEndPoint;
+                    if (localIpEndPoint != null)
+                    {
+                        connect = true;
+                        tabServer.IsEnabled = false;
+                        connectServer.IsEnabled = false;
 
-                    logClient.Text = "Serveur démarré !";
-                    logClient.Text += Environment.NewLine;
-                    logClient.Text += "Adresse ip du cluster : " + localIpEndPoint.Address + " (localhost)";
-                    logClient.Text += Environment.NewLine;
-                    logClient.Text += "Port du cluster : " + localIpEndPoint.Port;
+                        logClient.Text = "Serveur démarré !";
+                        logClient.Text += Environment.NewLine;
+                        logClient.Text += "Adresse ip du cluster : " + localIpEndPoint.Address + " (localhost)";
+                        logClient.Text += Environment.NewLine;
+                        logClient.Text += "Port du cluster : " + localIpEndPoint.Port;
+                    }
+                    else
+                    {
+                        logClient.Text = "Erreur impossible de démarré le serveur, vérifiez que le port est disponible !";
+                    }
                 }
                 else
                 {
-                    logClient.Text = "Erreur impossible de démarré le serveur, vérifiez que le port est disponible !";
+                    logClient.Text = "Le port doit etre un numéro !";
                 }
             }
             else
             {
-                logClient.Text = "Le port doit etre un numéro !";
+                //TODO doite de dialogue connected
             }
         }
 
-        // Node Mode
-        private void BtnClickConnectServer(object sender, RoutedEventArgs e)
+        // client Mode
+        private void BtnClickConnectToServer(object sender, RoutedEventArgs e)
         {
-            System.Net.IPAddress ipAdress = null;
-            int port;
-
-            if (IPAddress.TryParse(adressServer.Text, out ipAdress) && int.TryParse(portServer.Text, out port))
+            if(!connect)
             {
-                logServer.Text += "Connexion en cours";
-                logServer.Text += Environment.NewLine;
+                if (IPAddress.TryParse(adressServer.Text, out ipAdress) && int.TryParse(portServer.Text, out port))
+                {
+                    logServer.Text += "Connexion en cours";
+                    logServer.Text += Environment.NewLine;
 
-                IPEndPoint remoteEP = new IPEndPoint(ipAdress, port);
+                    client = new AsynchronousClient(ipAdress, port);
 
-                // Create a TCP/IP socket.
-                socketConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    connect = true;
 
-                // Connect to the remote endpoint.
-                socketConnection.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), socketConnection);
-                connectDone.WaitOne();
+                    tabClient.IsEnabled = false;
+                    portClient.IsEnabled = false;
+                    connectClient.IsEnabled = false;
+                    urlFile.IsEnabled = true;
+                    browse.IsEnabled = true;
 
-                connect = true;
-
-                tabClient.IsEnabled = false;
-                portClient.IsEnabled = false;
-                connectClient.IsEnabled = false;
-                urlFile.IsEnabled = true;
-                browse.IsEnabled = true;
-
-                logServer.Text += "Connecté au serveur !";
-                logServer.Text += Environment.NewLine;
+                    logServer.Text += "Connecté au serveur !";
+                    logServer.Text += Environment.NewLine;
+                }
+                else
+                {
+                    logServer.Text += "Valeurs incorrectes (ip /port)";
+                    logServer.Text += Environment.NewLine;
+                }
             }
             else
             {
-                logServer.Text += "Valeurs incorrectes (ip /port)";
-                logServer.Text += Environment.NewLine;
-            }
-        }
-
-        private void ConnectCallback(IAsyncResult ar)
-        {
-            try
-            {
-                // Retrieve the socket from the state object.
-                Socket client = (Socket)ar.AsyncState;
-
-                // Complete the connection.
-                client.EndConnect(ar);
-
-                // Signal that the connection has been made.
-                connectDone.Set();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
+                //TODO boite de dialogue connected
             }
         }
 
@@ -140,71 +128,29 @@ namespace DNA_Project
         {
             if (urlFile != null && urlFile.Text != "")
             {
-                /*logServer.Text += "Envoie du fichier au serveur, patientez...";
+                logServer.Text += "Envoie du fichier au serveur, patientez...";
+
                 logServer.Text += Environment.NewLine;
                 // TODO MAP
-
-                byte[] byteData = File.ReadAllBytes(urlFile.Text);
-                // Convert the string data to byte data using ASCII encoding.
-                // Begin sending the data to the remote device.
-                socketConnection.BeginSend(byteData, 0, byteData.Length, 0,
-                    new AsyncCallback(SendCallback), socketConnection);
-                sendBegin.WaitOne();
-
-                byte[] endFile = Encoding.UTF8.GetBytes("<EOF>");
-                socketConnection.BeginSend(endFile, 0, endFile.Length, 0,
-                    new AsyncCallback(EndSendCallback), socketConnection);
-
-                sendDone.WaitOne();
-                logServer.Text += "Envoie de fichier terminé, Traitement en cours, patientez ...";
-                logServer.Text += Environment.NewLine;
-
-                // TODO REDUCE
-                // RECEIVE RESULT & COMPUTE*/
- 
-                logServer.Text += "Envoie du fichier au serveur, patientez...";
-                logServer.Text += Environment.NewLine;
-
-                // MAP
-                byte[] byteData;
                 String[] lines = File.ReadAllLines(urlFile.Text);
                 StringBuilder strToSend = new StringBuilder();
-
                 int i = 0;
-                int j = 0;
-                char[] MyChar = { ' ' };
-                object[] result = new object[lines.Count()]; 
+                String response="";
+
                 while (lines.Count() != i)
                 {
-  
-                    strToSend.Append(lines[i]/*.Replace(" ", "")*/);
-                    //Console.WriteLine(lines[i].Replace(" ", ""));
-
-                    //Converte string to byte array
-                    byteData = Encoding.UTF8.GetBytes(strToSend.ToString());
-                    //Send byte array
-                    // Convert the string data to byte data using ASCII encoding.
                     // Begin sending the data to the remote device.
-                    socketConnection.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), socketConnection);
-                    sendBegin.WaitOne();
-
-                    byte[] endFile = Encoding.UTF8.GetBytes("<EOF>");
-                    socketConnection.BeginSend(endFile, 0, endFile.Length, 0, new AsyncCallback(EndSendCallback), socketConnection);
-
-                    sendDone.WaitOne();
-
+                    //response = client.SendToServer(lines[i]);
+                    response = response + client.SendToServer(lines[i]) + "\n";
                     // TODO REDUCE
-                    //Receive resulte
-                    result[i] = server.Process(lines[i]);
-
-
-                    // increment i + 500
                     i = i+1;
                     strToSend.Clear();
                 }
-                logServer.Text += "Envoie de fichier terminé, Traitement en cours, patientez ...";
+                Console.WriteLine("MAINWINDOWS Server response : " + response);
+
+
                 logServer.Text += Environment.NewLine;
-                // RECEIVE RESULT and reduce this & COMPUTE
+                // RECEIVE RESULT & reduce
                 //results
                 //logServer.Text += result;
                 //logServer.Text += Environment.NewLine;
@@ -213,44 +159,6 @@ namespace DNA_Project
             else{
                 logServer.Text += "Fichier introuvable";
                 logServer.Text += Environment.NewLine;
-            }
-        }
-
-        private static void SendCallback(IAsyncResult ar)
-        {
-            try
-            {
-                // Retrieve the socket from the state object.
-                Socket client = (Socket)ar.AsyncState;
-
-                // Complete sending the data to the remote device.
-                int bytesSent = client.EndSend(ar);
-
-                // Signal that all bytes have been sent.
-                sendBegin.Set();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
-
-        private static void EndSendCallback(IAsyncResult ar)
-        {
-            try
-            {
-                // Retrieve the socket from the state object.
-                Socket client = (Socket)ar.AsyncState;
-
-                // Complete sending the data to the remote device.
-                int bytesSent = client.EndSend(ar);
-
-                // Signal that all bytes have been sent.
-                sendDone.Set();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
             }
         }
 
